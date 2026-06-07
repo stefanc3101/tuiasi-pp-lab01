@@ -1,20 +1,28 @@
 package ro.tuiasi.pp.lab01
 
+import java.io.File
+
 /**
  * Citește conținutul unui fișier text.
  * Returnează șirul de caractere din fișier.
  * Aruncă IllegalArgumentException dacă fișierul nu există.
  */
 fun readFile(path: String): String {
-    TODO("De implementat")
+    val file = File(path)
+    if (!file.exists()) {
+        throw IllegalArgumentException("Fișierul nu a putut fi găsit la calea: $path")
+    }
+    return file.readText()
 }
 
 /**
- * Elimină semnele de punctuație din text (. , ; : ! ? " ' ( ) [ ] { } - _ / \ @ # $ % ^ & * + = ~ `).
+ * Elimină semnele de punctuație din text.
  * Exemplu: "Salut, lume!" -> "Salut lume"
  */
 fun removePunctuation(text: String): String {
-    TODO("De implementat")
+    // Definim setul specific de caractere care trebuie eliminate
+    val punctuations = ".,;:!?\"'()[]{}<>-_/\\@#\$%^&*+=~`"
+    return text.filterNot { it in punctuations }
 }
 
 /**
@@ -23,7 +31,7 @@ fun removePunctuation(text: String): String {
  * Exemplu: "  ana   are   mere  " -> "ana are mere"
  */
 fun removeExtraSpaces(text: String): String {
-    TODO("De implementat")
+    return text.trim().replace(Regex("\\s+"), " ")
 }
 
 /**
@@ -31,7 +39,7 @@ fun removeExtraSpaces(text: String): String {
  * Exemplu: "Ana Are Mere" -> "ana are mere"
  */
 fun toLowerCase(text: String): String {
-    TODO("De implementat")
+    return text.lowercase()
 }
 
 /**
@@ -39,7 +47,7 @@ fun toLowerCase(text: String): String {
  * Exemplu: "ana are mere" -> "ANA ARE MERE"
  */
 fun toUpperCase(text: String): String {
-    TODO("De implementat")
+    return text.uppercase()
 }
 
 /**
@@ -48,7 +56,10 @@ fun toUpperCase(text: String): String {
  * Exemplu: filterWordsByLength("ana are mere acasa", 4) -> "mere"
  */
 fun filterWordsByLength(text: String, length: Int): String {
-    TODO("De implementat")
+    // Folosim split după spații și păstrăm doar cuvintele de dimensiunea dorită
+    return text.split(Regex("\\s+"))
+        .filter { it.length == length }
+        .joinToString(" ")
 }
 
 /**
@@ -57,7 +68,8 @@ fun filterWordsByLength(text: String, length: Int): String {
  * Notă: spațiile rezultate nu sunt compactate — aplică removeExtraSpaces separat dacă e necesar.
  */
 fun filterNumbers(text: String): String {
-    TODO("De implementat")
+    // Înlocuim orice secvență de una sau mai multe cifre (\d+) cu un șir gol
+    return text.replace(Regex("\\d+"), "")
 }
 
 /**
@@ -66,5 +78,8 @@ fun filterNumbers(text: String): String {
  *          -> "salut lume 123"
  */
 fun processText(text: String, transformations: List<(String) -> String>): String {
-    TODO("De implementat")
+    // fold parcurge lista de funcții și aplică rezultatul acumulat (acc) ca parametru pentru următoarea
+    return transformations.fold(text) { acc, transformFunction ->
+        transformFunction(acc)
+    }
 }
